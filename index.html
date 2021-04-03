@@ -14,26 +14,34 @@
             <span id="sub-title">J1MMY-4426</span>
         </nav>
         <div id="display">
-            <span></span>
+            <span id="number-display"></span>
+            <span id="number-carry"></span>
         </div>
         <div id="buttons">
-            <button class="number-btn">0</button>
-            <button class="number-btn">1</button>
-            <button class="number-btn">2</button>
-            <button class="number-btn">3</button>
-            <button class="number-btn">4</button>
-            <button class="number-btn">5</button>
-            <button class="number-btn">6</button>
-            <button class="number-btn">7</button>
-            <button class="number-btn">8</button>
-            <button class="number-btn">9</button>
-            <button class="operator-btn">+</button>
-            <button class="operator-btn">-</button>
-            <button class="operator-btn">*</button>
-            <button class="operator-btn">/</button>
-            <button class="operator-btn">=</button>
-            <button class="action-btn">Delete</button>
-            <button class="action-btn">Clear</button>
+            <div id="actions">
+                <button class="action-btn">Delete</button>
+                <button class="action-btn">Clear</button>
+            </div>
+            <div id="numbers">
+                <button class="number-btn">1</button>
+                <button class="number-btn">2</button>
+                <button class="number-btn">3</button>
+                <button class="number-btn">4</button>
+                <button class="number-btn">5</button>
+                <button class="number-btn">6</button>
+                <button class="number-btn">7</button>
+                <button class="number-btn">8</button>
+                <button class="number-btn">9</button>
+                <button class="number-btn">0</button>
+                <button class="number-btn">.</button>
+                <button id="total-btn">=</button>
+            </div>
+            <div id="operators">
+                <button class="operator-btn" value="add">+</button>
+                <button class="operator-btn" value="subtract">-</button>
+                <button class="operator-btn" value="multiply">*</button>
+                <button class="operator-btn" value="divide">/</button>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>
