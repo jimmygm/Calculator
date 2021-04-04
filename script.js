@@ -130,21 +130,28 @@ function clearResult() {
     }
 }
 
+function clickButton(button) {
+    button.click();
+    button.classList.toggle('focus');
+    setTimeout(() => {
+        button.classList.toggle('focus');
+    }, 120);
+}
+
 function keyboardSupport(e) {
     // Numbers support
     numberButtons.forEach((button) => {
-        if (e.key == button.textContent) button.click();
+        if (e.key == button.textContent) clickButton(button);
     });
     // Decimal support
-    if (e.key == '.') decimalButton.click();
+    if (e.key == '.') clickButton(decimalButton);
     // Operators support
     operatorButtons.forEach((button) => {
-        if (e.key == button.textContent) button.click();
+        if (e.key == button.textContent) clickButton(button);
     });
 
-    if (e.key == 'Backspace') deleteButton.click();
-    if (e.key == 'Enter') totalButton.click();
-    console.log(e.key);
+    if (e.key == 'Backspace') clickButton(deleteButton);
+    if (e.key == 'Enter') clickButton(totalButton);
 }
 
 let currentNum = '';
