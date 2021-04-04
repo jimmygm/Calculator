@@ -3,6 +3,7 @@ let operatorButtons = document.querySelectorAll('.operator-btn');
 let totalButton = document.querySelector('#total-btn');
 let deleteButton = document.querySelector('#delete-btn');
 let clearButton = document.querySelector('#clear-btn');
+let decimalButton = document.querySelector('#decimal-btn');
 let display = document.querySelector('#number-display');
 
 function add(num1, num2) {
@@ -22,39 +23,10 @@ function divide(num1, num2) {
 }
 
 function operate(num1, num2, operator) {
+    if ((num1 == 0 || num2 == 0) && operator == divide) {
+        return 'Error';
+    }
     return operator(num1, num2);
-}
-
-function addNumber(e) {
-    currentNum += this.textContent;
-    displayNumber(currentNum);
-}
-
-function addOperator(e) {
-    if (operator) {
-        // If there's already an operator, calculate the result
-        calcAndResult();
-        resetDisplay();
-        // Save the next operator for the next operation
-        operator = this.getAttribute('value');
-    }
-
-    if (!operator) {
-        // If there's not an operator, add it to use it later
-        operator = this.getAttribute('value');
-        lastNum = +currentNum;
-        resetDisplay();
-    }
-}
-
-function totalResult(e) {
-    if (operator) {
-        // If there's already an operator, calculate the result
-        calcAndResult();
-        currentNum = lastNum;
-        // Reset the operator
-        operator = false;
-    }
 }
 
 function checkOperator(string) {
@@ -71,11 +43,65 @@ function checkOperator(string) {
 }
 
 function displayNumber(number = '') {
-    display.textContent = number;
+    if (number.includes('.')) {
+        // if number is a decimal
+        display.textContent = Number(number).toPrecision(3);
+    } else {
+        display.textContent = number;
+    }
+}
+
+function addNumber(e) {
+    currentNum += this.textContent;
+    display.textContent = currentNum;
+}
+
+function addDecimal(e) {
+    currentNum += this.textContent;
+    display.textContent = currentNum;
+    this.disabled = true;
+}
+
+function delResult(e) {
+    if (currentNum != '') {
+        // convert to array
+        currentNum = currentNum.split('');
+        // removes the last one
+        currentNum.pop();
+        // join it again
+        currentNum = currentNum.join('');
+        // activates decimal button again if '.' was deleted
+        if (!currentNum.includes('.')) {
+            decimalButton.disabled = false;
+        }
+
+        display.textContent = currentNum;
+    }
+}
+
+function addOperator(e) {
+    if (currentNum != '') {
+        if (operator) {
+            // If there's already an operator, calculate the result
+            calcAndResult();
+            resetDisplay();
+            // Save the next operator for the next operation
+            operator = this.getAttribute('value');
+        }
+        if (!operator) {
+            // If there's not an operator, add it to use it later
+            operator = this.getAttribute('value');
+            lastNum = +currentNum;
+            resetDisplay();
+        }
+    }
 }
 
 function calcAndResult() {
     lastNum = operate(lastNum, +currentNum, checkOperator(operator));
+    lastNum = lastNum.toString().split('').includes('.')
+        ? lastNum.toPrecision(3).toString()
+        : lastNum.toString();
     displayNumber(lastNum);
 }
 
@@ -83,35 +109,53 @@ function resetDisplay() {
     currentNum = '';
 }
 
-function delResult(e) {
-    // convert to array
-    currentNum = currentNum.split('');
-    // removes the last one
-    currentNum.pop();
-    // join it again
-    currentNum = currentNum.join('');
-
-    displayNumber(currentNum);
+function totalResult(e) {
+    if (operator && currentNum != '') {
+        // If there's already an operator, calculate the result
+        calcAndResult();
+        currentNum = lastNum;
+        // Reset the operator
+        operator = false;
+        // Disable decimal button if result contains decimals
+        if (currentNum.includes('.')) decimalButton.disabled = true;
+    }
 }
 
 function clearResult() {
-    lastNum = undefined;
-    resetDisplay();
-    displayNumber(currentNum);
+    if (currentNum != '') {
+        lastNum = undefined;
+        resetDisplay();
+        displayNumber(currentNum);
+        decimalButton.disabled = false;
+    }
+}
+
+function keyboardSupport(e) {
+    // Numbers support
+    numberButtons.forEach((button) => {
+        if (e.key == button.textContent) button.click();
+    });
+    // Decimal support
+    if (e.key == '.') decimalButton.click();
+    // Operators support
+    operatorButtons.forEach((button) => {
+        if (e.key == button.textContent) button.click();
+    });
+
+    if (e.key == 'Backspace') deleteButton.click();
+    if (e.key == 'Enter') totalButton.click();
+    console.log(e.key);
 }
 
 let currentNum = '';
 let lastNum;
 let operator;
 
-numberButtons.forEach((button) => {
-    button.addEventListener('click', addNumber);
-});
-
-operatorButtons.forEach((button) => {
-    button.addEventListener('click', addOperator);
-});
-
+numberButtons.forEach((button) => button.addEventListener('click', addNumber));
+operatorButtons.forEach((button) => button.addEventListener('click', addOperator));
 totalButton.addEventListener('click', totalResult);
 deleteButton.addEventListener('click', delResult);
 clearButton.addEventListener('click', clearResult);
+decimalButton.addEventListener('click', addDecimal);
+
+window.addEventListener('keydown', keyboardSupport);
