@@ -28,6 +28,8 @@ button {
     font-family: digital;
     font-size: 1.2em;
     transition-duration: 300ms;
+
+    cursor: pointer;
 }
 
 button:hover {
@@ -74,6 +76,7 @@ nav {
     grid-template-rows: minmax(40px, 1fr);
     place-items: center;
 
+    background-color: rgb(20, 5, 27);
     border: double 4px var(--border);
     width: 98%;
 
@@ -112,4 +115,10 @@ nav {
 #operators {
     display: grid;
     grid-template-columns: 1fr;
+}
+
+#keyboard {
+    position: fixed;
+    top: 10px;
+    left: 10px;
 }
